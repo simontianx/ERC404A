@@ -92,7 +92,7 @@ abstract contract ERC404A is Ownable {
         address indexed operator,
         bool approved
     );
-    event Swap(
+    event SwapPosition(
         address indexed owner, 
         uint256 indexed id1, 
         uint256 indexed id2
@@ -354,9 +354,9 @@ abstract contract ERC404A is Ownable {
         return 10 ** decimals;
     }
 
-    function _swap(uint256 id1, uint256 id2) internal virtual {
+    function _swapPosition(uint256 id1, uint256 id2) internal virtual {
         address owner = _ownerOf[id1];
-        if (owner != _ownerOf[id2] && owner == address(0)) {
+        if (owner != _ownerOf[id2] || owner == address(0) || id1 == id2) {
             revert InvalidSwap();
         }
 
@@ -369,7 +369,7 @@ abstract contract ERC404A is Ownable {
         _ownedIndex[id1] = index2;
         _ownedIndex[id2] = index1;
 
-        emit Swap(owner, id1, id2);
+        emit SwapPosition(owner, id1, id2);
     }
 
     function _mint(address to) internal virtual {

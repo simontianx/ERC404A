@@ -10,8 +10,8 @@ contract Example is ERC404A {
         setWhitelist(_owner, true);
     }
 
-    function swap(uint256 id1, uint256 id2) public {
-        _swap(id1, id2);
+    function swapPosition(uint256 id1, uint256 id2) public {
+        _swapPosition(id1, id2);
     }
 
     function tokenURI(uint256 id) public pure override returns (string memory){
