@@ -1,66 +1,32 @@
-## Foundry
+## Introduction to ERC404A
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+ERC404A is a proposed enhancement to the existing ERC404 standard, specifically designed to address a notable limitation in the management of owned Non-Fungible Tokens (NFTs). The current ERC404 implementation employs a Last-In-First-Out (LIFO) approach for dealing with the array of owned NFTs. This mechanism can be suboptimal and potentially risky, especially when valuable NFTs are positioned towards the end of the array. The inflexibility of not allowing users to rearrange their NFTs poses a significant drawback in certain scenarios.
 
-Foundry consists of:
+Recognizing this issue, ERC404A introduces a significant improvement through the addition of a `swap` function. This function enables owners to exchange the positions of any two NFTs within their owned collection. This capability not only enhances the flexibility in managing the NFTs but also addresses the safety concerns associated with the fixed order of NFTs in the owner's array.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### Swap Function Implementation
 
-## Documentation
+The `swap` function in ERC404A allows for the exchange of positions between any two NFTs within an owner's collection. This internal function ensures that the swap operation is only permitted for NFTs owned by the same address. The implementation is as follows:
 
-https://book.getfoundry.sh/
+```solidity
+function _swap(uint256 id1, uint256 id2) internal virtual {
+    address owner = _ownerOf[id1];
+    // Check if both NFTs have the same owner and the owner is not the zero address
+    if (owner != _ownerOf[id2] || owner == address(0)) {
+        revert InvalidSwap();
+    }
 
-## Usage
+    uint256 index1 = _ownedIndex[id1];
+    uint256 index2 = _ownedIndex[id2];
 
-### Build
+    // Swap the NFTs within the owner's collection
+    _owned[owner][index1] = id2;
+    _owned[owner][index2] = id1;
 
-```shell
-$ forge build
+    // Update the indices to reflect the swap
+    _ownedIndex[id1] = index2;
+    _ownedIndex[id2] = index1;
+}
 ```
 
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+The `_swap` function is designed to be secure and efficient, ensuring that only the legitimate owner can rearrange their NFTs, thus improving the overall user experience and security of the ERC404 standard.
