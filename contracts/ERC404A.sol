@@ -49,7 +49,7 @@ abstract contract ERC721Receiver {
     }
 }
 
-/// @notice ERC404
+/// @notice ERC404A
 ///         A gas-efficient, mixed ERC20 / ERC721 implementation
 ///         with native liquidity and fractionalization.
 ///
@@ -92,6 +92,11 @@ abstract contract ERC404A is Ownable {
         address indexed operator,
         bool approved
     );
+    event Swap(
+        address indexed owner, 
+        uint256 indexed id1, 
+        uint256 indexed id2
+    );
 
     // Errors
     error NotFound();
@@ -99,6 +104,7 @@ abstract contract ERC404A is Ownable {
     error InvalidRecipient();
     error InvalidSender();
     error UnsafeRecipient();
+    error InvalidSwap();
 
     // Metadata
     /// @dev Token name
@@ -362,6 +368,8 @@ abstract contract ERC404A is Ownable {
 
         _ownedIndex[id1] = index2;
         _ownedIndex[id2] = index1;
+
+        emit Swap(owner, id1, id2);
     }
 
     function _mint(address to) internal virtual {
