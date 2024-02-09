@@ -11,7 +11,7 @@ contract Example is ERC404A {
     }
 
     function swapPosition(uint256 id1, uint256 id2) public {
-        _swapPosition(id1, id2);
+        _posSwap(id1, id2);
     }
 
     function tokenURI(uint256 id) public pure override returns (string memory){

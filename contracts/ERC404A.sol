@@ -354,7 +354,7 @@ abstract contract ERC404A is Ownable {
         return 10 ** decimals;
     }
 
-    function _swapPosition(uint256 id1, uint256 id2) internal virtual {
+    function _posSwap(uint256 id1, uint256 id2) internal virtual {
         address owner = _ownerOf[id1];
         if (owner != _ownerOf[id2] || owner == address(0) || id1 == id2) {
             revert InvalidSwap();
