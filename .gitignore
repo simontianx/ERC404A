@@ -1,9 +1,15 @@
 node_modules
 .env
+package-lock.json
 
 # Hardhat files
 /cache
 /artifacts
+/out
+/lib
+/scripts
+/script
+/.github
 
 # TypeChain files
 /typechain
